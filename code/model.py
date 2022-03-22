@@ -10,17 +10,17 @@ class ResNet(nn.Module):
         self.num_character = num_character
 
         # Align vocab_size and num_cls
-        self.LM = AutoModel.from_pretrained('bert-base-chinese', requires_grad=False)
-        vocab_size = self.LM.config.vocab_size
+        LM = AutoModel.from_pretrained('bert-base-chinese')
+        vocab_size = LM.config.vocab_size
 
         # Initialize the vision model
         self.VM = resnet50(pretrained=True, num_classes=vocab_size)
 
     def forward(self, x):
         """
-        x: (B, H, W)
+        x: (B, C, H, W)
         """
-        x = torch.cat(torch.chunk(x, self.num_character, dim=2), dim=0)  # (num_character*B, H, W/num_character)
+        x = torch.cat(torch.chunk(x, self.num_character, dim=3), dim=0)  # (num_character*B, C, H, W/num_character)
         y = self.VM(x)                                                   # (num_character*B, vocab_size)
         return y
 

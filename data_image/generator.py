@@ -2,6 +2,7 @@ import random
 import json
 from PIL import Image
 from PIL import ImageDraw, ImageFont
+import os
 
 
 class RandomChar():
@@ -77,47 +78,52 @@ class ImageChar():
         self.image.save(path, 'png')
 
 
-if __name__ == '__main__':
+def generate(name='captcha_single', split='train', dirty=20):
+    data_dir = os.path.join(f"{name}_{dirty:02}", split)
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+
     with open('../data_text/character_3000.txt', 'r') as fp:
         text = fp.read().split()
-        data_info = open('./data_single_info.json', 'w')
         index_info = []
-        import os
-        split = 'test'
-        seed = 19
-        os.makedirs(f'captcha_single_05/{split}')
-        #os.makedirs(f'captcha_single_40/{split}')
-        #os.makedirs(f'captcha_single_60/{split}')
 
-        random.seed(seed)
+        if split == 'valid':
+            random.seed(1)
+            text = random.choices(text, k=300)
+        elif split == 'test':
+            random.seed(2)
+            text = random.choices(text, k=600)
+
         for i, word in enumerate(text):
-            a = random.randint(0, 2999)
-            if a % 5 != 0:
-                continue
             ic = ImageChar(fontColor=(200, 211, 170))
-            ic.randChinese(word, 20)
-            ic.save(f"./captcha_single_05/{split}/{i:04d}.png")
+            ic.randChinese(word, dirty)
+            ic.save(f"{data_dir}/{i:04d}.png")
             index_info.append({'id': f'{i:04d}',
                                'label': word})
-        #json.dump(index_info, data_info, indent=4)
 
-"""
-        random.seed(seed)
-        for i, word in enumerate(text):
-            #a = random.randint(0, 2999)
-            #if a % 10 != 0:
-            #    continue
-            ic = ImageChar(fontColor=(200, 211, 170))
-            ic.randChinese(word, 40)
-            ic.save(f"./captcha_single_40/{split}/{i:04d}.png")
+        return index_info
 
-        random.seed(seed)
-        for i, word in enumerate(text):
-            #a = random.randint(0, 2999)
-            #if a % 10 != 0:
-            #    continue
-            ic = ImageChar(fontColor=(200, 211, 170))
-            ic.randChinese(word, 60)
-            ic.save(f"./captcha_single_60/{split}/{i:04d}.png")
-"""
 
+if __name__ == '__main__':
+    train_info = generate("captcha_single", "train", 5)
+    valid_info = generate("captcha_single", "valid", 5)
+    test_info = generate("captcha_single", "test", 5)
+
+    info = {"train": train_info,
+            "valid": valid_info,
+            "test": test_info}
+    with open("data_single_info.json", "w") as fp:
+        json.dump(info, fp, indent=4)
+        fp.close()
+
+    generate("captcha_single", "train", 20)
+    generate("captcha_single", "valid", 20)
+    generate("captcha_single", "test", 20)
+
+    generate("captcha_single", "train", 40)
+    generate("captcha_single", "valid", 40)
+    generate("captcha_single", "test", 40)
+
+    generate("captcha_single", "train", 60)
+    generate("captcha_single", "valid", 60)
+    generate("captcha_single", "test", 60)
