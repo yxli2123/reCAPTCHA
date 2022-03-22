@@ -84,6 +84,7 @@ def main():
         if args.ckpt:
             checkpoint = torch.load(args.ckpt, map_location=device)
             VM.load_state_dict(checkpoint['model_state_dict'])
+        VM = VM.to(device)
 
         ############################
         #         OPTIMIZER        #
