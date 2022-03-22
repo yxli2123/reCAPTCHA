@@ -23,7 +23,7 @@ class RandomChar():
 
 class ImageChar():
     def __init__(self, fontColor=(0, 0, 0),
-                 size=(80, 40),
+                 size=(40, 40),
                  fontPath='simsun.ttc',
                  bgColor=(255, 255, 255),
                  fontSize=25):
@@ -78,30 +78,46 @@ class ImageChar():
 
 
 if __name__ == '__main__':
-    with open('../data_text/common_words_2ch.txt', 'r') as fp:
+    with open('../data_text/character_3000.txt', 'r') as fp:
         text = fp.read().split()
-        data_info = open('./data_info.json', 'w')
+        data_info = open('./data_single_info.json', 'w')
         index_info = []
         import os
-        os.mkdir('captcha_20')
-        os.mkdir('captcha_40')
-        os.mkdir('captcha_60')
+        split = 'test'
+        seed = 19
+        os.makedirs(f'captcha_single_05/{split}')
+        #os.makedirs(f'captcha_single_40/{split}')
+        #os.makedirs(f'captcha_single_60/{split}')
 
+        random.seed(seed)
         for i, word in enumerate(text):
+            a = random.randint(0, 2999)
+            if a % 5 != 0:
+                continue
             ic = ImageChar(fontColor=(200, 211, 170))
             ic.randChinese(word, 20)
-            ic.save(f"./captcha_20/{i:04d}.png")
+            ic.save(f"./captcha_single_05/{split}/{i:04d}.png")
             index_info.append({'id': f'{i:04d}',
                                'label': word})
+        #json.dump(index_info, data_info, indent=4)
 
+"""
+        random.seed(seed)
         for i, word in enumerate(text):
+            #a = random.randint(0, 2999)
+            #if a % 10 != 0:
+            #    continue
             ic = ImageChar(fontColor=(200, 211, 170))
             ic.randChinese(word, 40)
-            ic.save(f"./captcha_40/{i:04d}.png")
+            ic.save(f"./captcha_single_40/{split}/{i:04d}.png")
 
+        random.seed(seed)
         for i, word in enumerate(text):
+            #a = random.randint(0, 2999)
+            #if a % 10 != 0:
+            #    continue
             ic = ImageChar(fontColor=(200, 211, 170))
             ic.randChinese(word, 60)
-            ic.save(f"./captcha_60/{i:04d}.png")
+            ic.save(f"./captcha_single_60/{split}/{i:04d}.png")
+"""
 
-        json.dump(index_info, data_info, indent=4)
