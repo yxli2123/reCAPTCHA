@@ -20,7 +20,7 @@ def main():
     parser.add_argument('--mode',           type=str,   default='train', choices=['train', 'test'])
     parser.add_argument('--exp_dir',        type=str,   default='../exp_log')
     parser.add_argument('--exp_name',       type=str,   default='captcha_single_05')
-    parser.add_argument('--run_name',       type=str,   default='bs_2')
+    parser.add_argument('--run_name',       type=str,   default='resnet101_nopretrain_bs64')
 
     # Dataset Parameters
     parser.add_argument('--data_dir',       type=str,   default='../data_image/captcha_single_05/')
@@ -29,16 +29,16 @@ def main():
     parser.add_argument('--topk',           type=int,   default=5)
 
     # Training Parameters
-    parser.add_argument('--epochs',         type=int,   default=5000)
-    parser.add_argument('--batch_size',     type=int,   default=2)
-    parser.add_argument('--lr',             type=float, default=1e-4)
+    parser.add_argument('--epochs',         type=int,   default=1000)
+    parser.add_argument('--batch_size',     type=int,   default=64)
+    parser.add_argument('--lr',             type=float, default=5e-4)
     parser.add_argument('--threads',        type=int,   default=4)
     parser.add_argument('--valid_interval', type=int,   default=10000)
     parser.add_argument('--print_interval', type=int,   default=1000)
     parser.add_argument('--save_interval',  type=int,   default=10000)
 
     # Model Parameters
-    parser.add_argument('--VM_name',        type=str,   default='ResNet50')
+    parser.add_argument('--VM_name',        type=str,   default='ResNet101')
     parser.add_argument('--LM_name',        type=str,   default='bert-base-chinese')
     parser.add_argument('--ckpt',           type=str,   default=None)
 

@@ -1,4 +1,4 @@
-from resnet import resnet50
+from resnet import resnet50, resnet101
 import torch.nn as nn
 import torch
 from transformers import AutoModel
@@ -14,7 +14,7 @@ class ResNet(nn.Module):
         vocab_size = LM.config.vocab_size
 
         # Initialize the vision model
-        self.VM = resnet50(pretrained=True, num_classes=vocab_size)
+        self.VM = resnet101(pretrained=False, num_classes=vocab_size)
 
     def forward(self, x):
         """
